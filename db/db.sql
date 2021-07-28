@@ -1,3 +1,3 @@
-DROP DATABASE IF EXISTS myrestaurant;
-CREATE DATABASE myrestaurant;
-USE myrestaurant;
+DROP DATABASE IF EXISTS mycompany;
+CREATE DATABASE mycompany;
+USE mycompany;
