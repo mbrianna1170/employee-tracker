@@ -1,7 +1,6 @@
 const db = require("./config/connection");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
-const NumberPrompt = require("inquirer/lib/prompts/number");
 
 // start employee-tracker
 const startTracker = () => {
@@ -17,6 +16,7 @@ const startTracker = () => {
         "Add Department",
         "Add Role",
         "Add Employee",
+        "Delete Department",
         "Exit",
       ],
     })
@@ -39,6 +39,9 @@ const startTracker = () => {
           break;
         case "Add Employee":
           addEmployee();
+          break;
+        case "Delete Department":
+          deleteDepartment();
           break;
         case "Exit":
           exit();
@@ -77,6 +80,27 @@ function addDepartment() {
     });
 }
 
+// deleteDepartment();
+function deleteDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "number",
+        message:
+          "Please input the ID of the department you would like to delete:",
+      },
+    ])
+    .then(function (data) {
+      const department_id = data.number;
+      const sql = `DELETE FROM departments WHERE id =${department_id}`;
+      db.query(sql, function (err, res) {
+        console.table(res);
+        startTracker();
+      });
+    });
+}
+
 // viewEmployees();
 function viewEmployees() {
   const sql = `SELECT * FROM employee`;
@@ -108,15 +132,15 @@ function addEmployee() {
       {
         type: "input",
         name: "managerID",
-        message: "Please enter the appropiate manager ID:"
-      }
+        message: "Please enter the appropiate manager ID:",
+      },
     ])
     .then(function (data) {
       const firstName = data.firstName;
       const lastName = data.lastName;
       const roleID = data.roleID;
       const manager_id = data.managerID;
-      const sql = `INSERT INTO role (first_name, last_name, role_id, manager_id)
+      const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
       VALUES ("${firstName}", "${lastName}", ${roleID}, ${manager_id})`;
       db.query(sql, function (err, res) {
         console.table(res);
@@ -140,25 +164,25 @@ function addRole() {
     .prompt([
       {
         type: "input",
-        name: "title",
+        name: "titleRole",
         message: "Enter new role:",
       },
       {
         type: "input",
-        name: "salary",
+        name: "salaryRole",
         message: "Enter salary for new role:",
       },
       {
         type: "input",
-        name: "department_id",
+        name: "departmentRole",
         message: "Please enter the appropiate department ID:",
       },
     ])
     .then(function (data) {
-      const title = data.title;
-      const salary = data.salary;
-      const department_id = data.department_id;
-      const sql = `INSERT INTO role (title, salary, department_id))
+      const title = data.titleRole;
+      const salary = data.salaryRole;
+      const department_id = data.departmentRole;
+      const sql = `INSERT INTO role (title, salary, department_id)
       VALUES ("${title}", ${salary}, ${department_id})`;
       db.query(sql, function (err, res) {
         console.table(res);
