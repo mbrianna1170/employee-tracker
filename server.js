@@ -1,52 +1,56 @@
-const mysql = require("mysql2");
-const inquirer = require("inquirer");
-const cTable = require("console.table");
+const db = require('./config/connection');
+const inquirer = require('inquirer');
+const cTable = require('console.table');
 
-// create connection to database
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    user: "root",
-    password: "Miso",
-    database: "mycompany",
-  },
-  console.log("Connected to the mycompany database")
-);
+// start employee-tracker
+const startTracker = () => {
+  inquirer
+  .prompt({
+      type: 'list',
+      name: 'start',
+      message: 'Welcome! What would you like to do?',
+      choices: ['View Departments', 'View Employees', 'View Roles', 'View All', 'Exit']
+  })
+  .then(function(userInfo) {
+    switch (userInfo.start) {
+      case "View Departments":
+      viewDepartments();
+      break;
+      case "View Employees":
+      viewEmployees();
+      break;
+      case "View Roles":
+        viewRoles();
+        break;
+      
 
-// VIEW all departments
-db.query(
-  `SELECT roles.*, departments.name
-AS dep_name
-FROM roles
-LEFT JOIN departments
-ON roles.department_id = departments.id;`,
-  (err, rows) => {
-    console.log(rows);
-  }
-);
+    }
+  })
+};
 
-// ADD a department
-const sql = `INSERT INTO departments (name) 
-              VALUES (?)`;
-const params = ["Test"];
+//view departments
+function viewDepartments() {
+  const sql = `SELECT * FROM departments`;
+  db.query(sql, function (err, res) {
+    console.table(res);
+    startTracker();
+  })
+}
 
-db.query(sql, params, (err, result) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log(result);
-});
+startTracker();
 
-// DELETE a department
 
-db.query(`DELETE FROM departments WHERE id = ?`, 1, (err, result) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log(result);
-});
 
-// view all roles
-db.query(`SELECT * FROM roles`, (err, rows) => {
-  console.log(rows);
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
