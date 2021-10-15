@@ -22,19 +22,45 @@ const startTracker = () => {
       case "View Roles":
         viewRoles();
         break;
+      case "Exit":
+      exit();
+      break;  
       
 
     }
   })
 };
 
-//view departments
+// view departments
 function viewDepartments() {
   const sql = `SELECT * FROM departments`;
   db.query(sql, function (err, res) {
     console.table(res);
     startTracker();
   })
+}
+
+// view employees
+function viewEmployees() {
+  const sql = `SELECT * FROM employee`;
+  db.query(sql, function (err, res) {
+    console.table(res);
+    startTracker();
+  })
+}
+
+//view roles
+function viewRoles() {
+  const sql = `SELECT * FROM role`;
+  db.query(sql, function (err, res) {
+    console.table(res);
+    startTracker();
+  })
+}
+
+// exit
+function exit() {
+  console.log('Thank you for visiting. Goodbye!')
 }
 
 startTracker();
